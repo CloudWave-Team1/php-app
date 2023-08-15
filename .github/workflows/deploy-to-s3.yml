@@ -3,7 +3,7 @@ name: Deploy PHP files to S3
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
@@ -16,11 +16,10 @@ jobs:
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
       with:
-        args: --acl public-read --follow-symlinks --delete
+        args: --follow-symlinks --delete --exclude '.git/*'
       env:
         AWS_S3_BUCKET: php-web-bucket-967724518132
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'ap-northeast-2' 
+        AWS_REGION: 'ap-northeast-2'
         SOURCE_DIR: '.' # root
-
