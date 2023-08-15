@@ -1,7 +1,19 @@
 <?php include "../inc/dbinfo.inc"; ?>
 
 <html>
+<head>
+    <title>수강신청 시스템</title>
+    <!-- Bootstrap v4.5 CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery CDN - Slim version (without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <!-- Bootstrap v4.5 JS CDN (Popper.js included) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
 <body>
+<div class="container mt-4">
 <h1>수강신청 시스템</h1>
 <?php
 
@@ -31,14 +43,16 @@ if (isset($_POST['selected_subjects'])) {
 
 ?>
 
-<button onclick="location.href='Insert.php'">과목 추가</button>
-<button onclick="location.href='Admin.php'">과목 삭제 및 더미데이터 추가</button>
+<button onclick="location.href='Insert.php'" class="btn btn-secondary">과목 추가</button>
+<button onclick="location.href='Admin.php'" class="btn btn-secondary">과목 삭제 및 더미데이터 추가</button>
 
 <br><hr><br>
 
+<h2>전체 과목 조회</h2>
 <!-- Display SUBJECT table data. -->
 <form method="POST">
-<table border="1" cellpadding="2" cellspacing="2">
+<table  class="table table-bordered table-striped">
+ <thead>
   <tr>
     <td>SELECT</td>
     <td>NAME</td>
@@ -46,7 +60,8 @@ if (isset($_POST['selected_subjects'])) {
     <td>TIME</td>
     <td>MAX_NUM</td>
   </tr>
-
+ </thead>
+ <tbody>
 <?php
 
 $result = mysqli_query($connection, "SELECT * FROM SUBJECT");
@@ -62,8 +77,9 @@ while ($query_data = mysqli_fetch_row($result)) {
 
 ?>
   <tr>
-    <td colspan="5"><input type="submit" value="신청하기"></td>
+    <td colspan="5"><input type="submit" class="btn btn-primary"  value="신청하기"></td>
   </tr>
+</tbody>
 </table>
 </form>
 
@@ -71,18 +87,19 @@ while ($query_data = mysqli_fetch_row($result)) {
 
 <h2>신청 과목 조회</h2>
 <!-- Display MYSUB JOINed with SUBJECT table data. -->
-<table border="1" cellpadding="2" cellspacing="2">
+<table class="table table-bordered table-striped">
+ <thead>
   <tr>
-    <td>MY_ID</td>
     <td>NAME</td>
     <td>PROFESSOR</td>
     <td>TIME</td>
     <td>MAX_NUM</td>
   </tr>
-
+ </thead>
+<tbody>
 <?php
 
-$result = mysqli_query($connection, "SELECT M.MY_ID, S.NAME, S.PROFESSOR, S.TIME, S.MAX_NUM FROM MYSUB M JOIN SUBJECT S ON M.SUBJECT_ID = S.ID");
+$result = mysqli_query($connection, "SELECT S.NAME, S.PROFESSOR, S.TIME, S.MAX_NUM FROM MYSUB M JOIN SUBJECT S ON M.SUBJECT_ID = S.ID");
 
 while ($query_data = mysqli_fetch_row($result)) {
     echo "<tr>";
@@ -95,8 +112,10 @@ while ($query_data = mysqli_fetch_row($result)) {
 mysqli_free_result($result);
 mysqli_close($connection);
 ?>
-
+</tbody>
 </table>
+<br><br>
+</div>
 </body>
 </html>
 
