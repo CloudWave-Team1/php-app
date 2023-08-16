@@ -35,7 +35,7 @@ jobs:
           --application-name web-code-cd \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name deploy-group-web \
-          --s3-location bucket=php-web-bucket-967724518132,bundleType=zip,key=codedeploy/code.zip
+          --s3-location bucket=php-web-bucket-967724518132,bundleType=zip,key=code.zip
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
