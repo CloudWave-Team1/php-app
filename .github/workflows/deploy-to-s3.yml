@@ -1,4 +1,4 @@
-name: Deploy PHP files to S3
+name: Deploy PHP files to S3 and Trigger CodeDeploy
 
 on:
   push:
@@ -13,13 +13,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Zip the code
+      run: |
+        mkdir codedeploy
+        zip -r codedeploy/code.zip . -x '*.git*' '.github/*' 'README.md'
+
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
       with:
-        args: --follow-symlinks --delete --exclude '.git/*' --exclude '.github/*' --exclude 'README.md'
+        args: --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: php-web-bucket-967724518132
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'ap-northeast-2'
-        SOURCE_DIR: '.' # root
+        SOURCE_DIR: 'codedeploy'
+
+    - name: Trigger CodeDeploy
+      run: |
+        aws deploy create-deployment \
+          --application-name web-code-cd \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name deploy-group-web \
+          --s3-location bucket=php-web-bucket-967724518132,bundleType=zip,key=codedeploy/code.zip
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: 'ap-northeast-2'
