@@ -15,6 +15,7 @@
 <body>
 <div class="container mt-4">
 <h1>수강신청 시스템</h1>
+<h1>테스트</h1>
 <?php
 
 $connection = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD);
